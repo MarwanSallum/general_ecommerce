@@ -41,6 +41,11 @@ return [
             'provider' => 'users',
         ],
 
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
+
         'api' => [
             'driver' => 'token',
             'provider' => 'users',
@@ -71,6 +76,11 @@ return [
             'model' => App\User::class,
         ],
 
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
+
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
@@ -91,7 +101,7 @@ return [
     | they have less time to be guessed. You may change this as needed.
     |
     */
-
+// إستعادة كلمة المرور هنا بشكل إفتراضي جاهزة للمستخدم وممكن عمل نفس الطريقة للأدمن
     'passwords' => [
         'users' => [
             'provider' => 'users',

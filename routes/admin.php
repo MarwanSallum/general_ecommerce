@@ -14,7 +14,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/admin', function () {
-    return view('admin.dashboard');
+Route::group(['namespace'=> 'Admin','middleware' => 'auth:admin'], function(){
+
+    Route::get('/', 'DashboardController@index')->name('admin.dashboard');
+
+});
+
+
+
+Route::group(['namespace'=> 'Admin','middleware' => 'guest:admin'], function(){
+
+    Route::get('login', 'LoginController@showLoginPage')->name('show.login.page');
+    Route::post('login','LoginController@login')->name('admin.login');
+   
 });
 
