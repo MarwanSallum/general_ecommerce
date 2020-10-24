@@ -29,4 +29,54 @@ class LanguagesController extends Controller
             return redirect()->route('admin.languages')->with(['error' => $ex]);
         }
     }
+
+    public function edit($id)
+    {
+        $language = Language::select()->find($id);
+        if(!$language){
+            return redirect()-> route('admin.languages')->with(['error' => 'هذه اللغة غير موجودة']);
+        }
+
+        return view('admin.languages.edit', compact('language'));
+    }
+
+    public function update($id, LanguageRequest $request)
+    {
+        try {
+
+            $language = Language::find($id);
+            if(!$language){
+            return redirect()-> route('admin.languages.edit',$id)->with(['error' => 'هذه اللغة غير موجودة']);
+            }
+            $language -> update($request->except(['_token']));
+
+            return redirect() -> route('admin.languages') -> with(['success' => ' تم تعديل اللغة بنجاح']);
+        
+        } catch (\ReflectionException $ex) {
+            return redirect()->route('admin.languages')->with(['error' => $ex]);
+        }
+
+        
+    }
+
+
+    public function destroy($id)
+    {
+        try {
+
+            $language = Language::find($id);
+            if(!$language){
+            return redirect()-> route('admin.languages',$id)->with(['error' => 'هذه اللغة غير موجودة']);
+            }
+            $language -> delete();
+
+            return redirect() -> route('admin.languages') -> with(['success' => ' تم حذف اللغة بنجاح']);
+        
+        } catch (\ReflectionException $ex) {
+            return redirect()->route('admin.languages')->with(['error' => $ex]);
+        }
+
+    }
+
+    
 }
