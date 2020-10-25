@@ -17,4 +17,16 @@ class MainCategory extends Model
         return $query -> where('active', true);
     }
 
+    public function scopeSelection($query){
+        return $query -> select('id', 'translation_lang', 'name', 'slug', 'photo','active');
+    }
+
+    public function getPhotoAttribute($val){
+        return ($val !== null) ? asset('assets/'. $val) : "";
+    }
+
+    public function getActive(){
+      return  $this -> active == 1 ? 'active' : 'not active';
+    }
+
 }
