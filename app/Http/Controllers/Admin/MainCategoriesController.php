@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MainCategoryRequest;
 use App\Models\MainCategory;
+use Facade\FlareClient\Stacktrace\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -62,5 +63,56 @@ class MainCategoriesController extends Controller
       DB::rollBack();
       return redirect() -> route('admin.main_categories') ->with(['error' => 'حدث خطأ ما برجاء المحاولة لاحقا']);
     }
+    }
+
+    public function edit($id){
+
+      $mainCategory = MainCategory::find($id);
+
+      if(!$mainCategory)
+          return redirect() -> route('admin.main_categories') ->with(['error' => 'هذا القسم غير موجود']);
+      
+      return view('admin.main_categories.edit', compact('mainCategory'));
+
+    }
+
+    public function update($mainCat_id,MainCategoryRequest $request){
+
+      try{
+        $main_category = MainCategory::find($mainCat_id);
+        if(!$main_category)
+            return redirect() -> route('admin.main_categories') -> with(['error' => 'هذا القسم غير موجود']);
+  
+          $category =  array_values($request -> category) [0];
+  
+          if(!$request -> has ('category.0.active'))
+            $request -> request -> add(['active' => 0]);
+          else
+          $request -> request -> add(['active' => 1]);
+
+          MainCategory::where('id', $mainCat_id)
+            ->update([
+              'name' => $category['name'],
+              'active' => $request -> active,
+            ]);
+
+          // Update Image
+          if($request -> has('photo')){
+            $filePath = uploadImage('main_categories', $request -> photo);
+            MainCategory::where('id', $mainCat_id)
+            ->update([
+              'photo' => $filePath,
+            ]);
+          }
+
+          
+        return redirect() -> route('admin.main_categories') ->with(['success' => 'تم التحديث القسم بنجاح']);
+  
+      }catch(\ReflectionException $ex){
+        return redirect() -> route('admin.main_categories') ->with(['error' => 'حدث خطأ ما برجاء المحاولة لاحقا']);
+
+      }
+
+
     }
 }
