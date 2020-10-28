@@ -18,7 +18,7 @@ class MainCategory extends Model
     }
 
     public function scopeSelection($query){
-        return $query -> select('id', 'translation_lang', 'name', 'slug', 'photo','active');
+        return $query -> select('id', 'translation_lang', 'name', 'slug', 'photo','active', 'translation_of');
     }
 
     public function getPhotoAttribute($val){
@@ -27,6 +27,10 @@ class MainCategory extends Model
 
     public function getActive(){
       return  $this -> active == 1 ? 'active' : 'not active';
+    }
+
+    public function categories(){
+        return $this -> hasMany(self::class, 'translation_of');
     }
 
 }

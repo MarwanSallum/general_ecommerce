@@ -67,7 +67,8 @@ class MainCategoriesController extends Controller
 
     public function edit($id){
 
-      $mainCategory = MainCategory::find($id);
+      // إستدعاء القسم مع جميع ترجماته المختلفه
+      $mainCategory = MainCategory::with('categories')->find($id);
 
       if(!$mainCategory)
           return redirect() -> route('admin.main_categories') ->with(['error' => 'هذا القسم غير موجود']);
